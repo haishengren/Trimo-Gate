@@ -3,7 +3,7 @@ import pandas as pd
 from SmilesPE.pretokenizer import atomwise_tokenizer
 
 
-df = pd.read_excel(r"E:\监督学习\Database\Quantum mechanics\QM8\QM8_clean.xlsx")
+df = pd.read_excel(r"QM9_dataset.xlsx")
 smiles_list = df.iloc[:, 0].tolist()
 smiles_list = [i.replace('\xa0', '').replace(' ', '') for i in smiles_list]
 
