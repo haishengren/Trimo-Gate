@@ -5,10 +5,10 @@ import numpy as np
 import pandas as pd
 
 
-DATA_PATH = r"QM9_dataset_with_U0_atom.xlsx"
-# XYZ_DIR = r"/multimodal_modeling/QM9/QM9_xyz"
-# XYZ_DIR = r"/workspace/scu/QM9/QM9"
-XYZ_DIR = r"/data/chuanda/QM9_cmcr/QM9"
+DATA_PATH = r"QM9_dataset"
+
+# XYZ_DIR = r"QM9_xyz"
+
 print("QM9 3D loader: xyz coordinates + .."
       ".xyz atom one-hot only; RDKit is not used.")
 
