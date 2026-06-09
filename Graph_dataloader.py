@@ -43,8 +43,8 @@ def get_chirality_type(x):
 def get_min_ring_sizes(mols):
     """
     返回：
-    - min_atom_ring_sizes: 每个原子的最小环大小；不在环中为 0
-    - min_bond_ring_sizes: 每条键的最小环大小；不在环中为 0
+    - min_atom_ring_sizes: 
+    - min_bond_ring_sizes:
     """
     ring_info = mols.GetRingInfo()
 
@@ -99,11 +99,6 @@ for idx, (smiles, label) in enumerate(zip(smiles_list, y)):
         all_bond_types.append(str(bond.GetBondType()))
         all_bond_stereos.append(str(bond.GetStereo()))
         all_bond_ring_sizes.append(min_bond_ring_sizes[bond.GetIdx()])
-
-# pd.DataFrame(invalid_smiles).to_excel(r"E:\监督学习\Multimodal model\TriMo-Gate\invalid_smiles.xlsx",
-#                                       index=False)
-# print(f"Invalid SMILES count: {len(invalid_smiles)}")
-
 
 # atom type
 element_list = sorted(set(all_elements))
@@ -338,70 +333,3 @@ graphs = [smiles_to_graph(smi) for smi in valid_smiles]
 node_dim, edge_dim = _node_dim, _edge_dim
 valid_smiles = valid_smiles
 
-print("\n检查图数据中的边特征异常...")
-problem_idx = []
-
-for i, (g, smi) in enumerate(zip(graphs, valid_smiles)):
-    edge_attr = g.edge_attr
-    edge_index = g.edge_index
-
-    if edge_index.ndim != 2 or edge_index.shape[0] != 2:
-        print(f"❌ 分子索引 {i}: SMILES = {smi}")
-        print(f"   edge_index 形状异常: {edge_index.shape}，期望为 [2, num_edges]")
-        problem_idx.append(i)
-
-    if edge_attr.ndim != 2 or edge_attr.shape[1] != edge_dim:
-        print(f"❌ 分子索引 {i}: SMILES = {smi}")
-        print(f"   edge_attr 形状异常: {edge_attr.shape}，期望为 [num_edges, {edge_dim}]")
-        problem_idx.append(i)
-
-    if edge_attr.shape[0] != edge_index.shape[1]:
-        print(f"❌ 分子索引 {i}: SMILES = {smi}")
-        print(f"   边数量不一致: edge_attr 有 {edge_attr.shape[0]} 条，edge_index 有 {edge_index.shape[1]} 条")
-        problem_idx.append(i)
-
-    if edge_attr.shape[0] == 0:
-        print(f"⚡ 分子索引 {i}: SMILES = {smi} 是无边分子")
-
-
-# # test
-# graph = smiles_to_graph('CC(=O)NCCCOc1cccc(CN2CCCCC2)c1')
-#
-# # 将特征转换为 DataFrame 并输出 Excel
-# # # 定义原子特征列名
-# atom_col_names = (
-#     [f'elem_{e}' for e in element_list] +
-#     [f'num_heavy_atom_{d}' for d in num_heavy_atom_list] +
-#     [f'numH_{h}' for h in num_h_list] +
-#     [f'formal_charge_{c}' for c in formal_charge_list] +
-#     [f'hybridization_{h}' for h in hybridization_list] +
-#     [f'chiral_{c}' for c in chirality_list] +
-#     ['is_aromatic'] +
-#     [f'atom_ring_size_{s}' for s in atom_ring_size_list] +
-#     ['mass_div_100']
-# )
-#
-# df_nodes = pd.DataFrame(graph.x.numpy(), columns=atom_col_names)
-# df_nodes.insert(0, 'atom_idx', range(len(df_nodes)))
-#
-# # 定义边特征列名
-# edge_col_names = (
-#     [f'bond_{bt}' for bt in bond_type_list] +
-#     ['is_conjugated'] +
-#     [f'bond_stereo_{bs}' for bs in bond_stereo_list] +
-#     [f'bond_ring_size_{s}' for s in bond_ring_size_list]
-# )
-#
-# df_edges = pd.DataFrame(graph.edge_attr.numpy(), columns=edge_col_names)
-# # 边索引信息
-# edge_src = graph.edge_index[0].tolist()
-# edge_dst = graph.edge_index[1].tolist()
-# df_edges.insert(0, 'src_atom', edge_src)
-# df_edges.insert(1, 'dst_atom', edge_dst)
-#
-# # 保存到 Excel 文件
-# with pd.ExcelWriter('test_features.xlsx') as writer:
-#     df_nodes.to_excel(writer, sheet_name='Atom features', index=False)
-#     df_edges.to_excel(writer, sheet_name='Bond features', index=False)
-#
-# print("特征已保存至 test_features.xlsx")
