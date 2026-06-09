@@ -29,23 +29,12 @@ import pandas as pd
 import torch
 from Model_1 import MultimodalModel
 from Graph_dataloader import edge_dim, graphs, node_dim, valid_smiles, y
-from QM9_xyz_to_3d_coords import d_input, point_cloud, point_cloud_lengths
-# from QM8_xyz_to_3d_coords import d_input, point_cloud, point_cloud_lengths
+from Point_cloud_dataloader import d_input, point_cloud, point_cloud_lengths
 from SMILES_dataloader_atom import indices, max_length, vocb_size
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.utils.data import DataLoader, Dataset, Subset
 from torch_geometric.data import Batch
-
-try:
-    import optuna
-except ImportError as exc:
-    raise ImportError(
-        "This script requires Optuna for Bayesian optimization. "
-        "Install it with: pip install optuna"
-    ) from exc
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
 
